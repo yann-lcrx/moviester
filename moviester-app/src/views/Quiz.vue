@@ -9,11 +9,11 @@
     </div>
     <div class="quiz__question">
       <div>
-        <p><span class="quiz__variable">Léa Seydoux</span> a-t-elle joué dans <span class="quiz__variable">The Lobster</span> ?</p>
+        <p>Did <span class="quiz__variable">{{ actor }}</span> play in <span class="quiz__variable">{{ film }}</span>?</p>
       </div>
       <div class="quiz__answer">
-        <Button btnclass="btn btn__yes" text="Oui" />
-        <Button btnclass="btn btn__no" text="Non" />
+        <Button btnclass="btn btn__yes" text="Yes" />
+        <Button btnclass="btn btn__no" text="No" />
       </div>
     </div>
   </section>
@@ -30,57 +30,59 @@ import Button from "@/components/Button.vue"
     data() {
       return {
         score: 140,
-        time: 60
+        time: 60,
+        actor: 'Léa Seydoux',
+        film: 'The Lobster'
       }
     }
   };
 </script>
 
 <style lang="scss">
-  .quiz {
-    font-size: 1.35rem;
+.quiz {
+  font-size: 1.35rem;
+  display: flex;
+  flex-flow: column nowrap;
+  flex: 1;
+  &__question {
+    background-color: #FDFDFD;
+    border: 1px lightgray solid;
+    border-radius: 8px;
+    padding: 12px;
     display: flex;
     flex-flow: column nowrap;
+    font-size: 1.7rem;
     flex: 1;
-    &__question {
-      background-color: #FDFDFD;
-      border: 1px lightgray solid;
-      border-radius: 8px;
-      padding: 12px;
-      display: flex;
-      flex-flow: column nowrap;
-      font-size: 1.7rem;
-      flex: 1;
-      justify-content: center;
-      p {
-        margin-top: 0px;
-      }
-    }
-    &__heading {
-      display: flex;
-      flex-flow: row nowrap;
-      justify-content: space-between;
-    }
-    &__answer {
-      width: 30%;
-      display: flex;
-      align-self: center;
-      justify-content: space-evenly;
-    }
-    &__variable {
-      color: $col-emphasis;
-    }
-    &__scores {
-      display: flex;
-      p {
-        margin-right: 24px;
-      }
+    justify-content: center;
+    p {
+      margin-top: 0px;
     }
   }
-  button {
-    background-color: unset;
-    border: 1px solid darkblue;
-    color: darkblue;
-    border-radius: 6px;
+  &__heading {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
   }
+  &__answer {
+    width: 30%;
+    display: flex;
+    align-self: center;
+    justify-content: space-evenly;
+  }
+  &__variable {
+    color: $col-emphasis;
+  }
+  &__scores {
+    display: flex;
+    p {
+      margin-right: 24px;
+    }
+  }
+}
+button {
+  background-color: unset;
+  border: 1px solid darkblue;
+  color: darkblue;
+  border-radius: 6px;
+}
 </style>

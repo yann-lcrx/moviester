@@ -11,12 +11,12 @@ export default {
 </script>
 
 <style lang="scss">
-    footer {
-        width: 100%;
-        height: 120px;
-        background-color: $col-layout;
-        display: flex;
-        justify-content: center;
-        margin-top: 32px;
-    }
+footer {
+    width: 100%;
+    height: 120px;
+    background-color: $col-layout;
+    display: flex;
+    justify-content: center;
+    margin-top: 32px;
+}
 </style>
