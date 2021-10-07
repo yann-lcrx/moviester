@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="moviester-app">
     <Header />
     <div class="page-body" role="main">
       <router-view />
@@ -26,11 +26,17 @@ export default {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
-    color: #152d46;
-    background-color: rgb(230, 230, 230);
+    color: $col-font;
+    background-color: $col-background;
   }
   .page-body {
     margin: auto;
     max-width: 900px;
+    min-height: 65%;
+    display: flex;
+    flex-flow: column nowrap;
+  }
+  html, body, #app, #moviester-app {
+    height: 100%;
   }
 </style>

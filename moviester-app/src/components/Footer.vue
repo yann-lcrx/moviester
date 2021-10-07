@@ -14,7 +14,7 @@ export default {
     footer {
         width: 100%;
         height: 120px;
-        background-color: rgb(255, 196, 0);
+        background-color: $col-layout;
         display: flex;
         justify-content: center;
         margin-top: 32px;

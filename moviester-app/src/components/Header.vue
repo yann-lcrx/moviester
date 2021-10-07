@@ -14,7 +14,7 @@ export default {
     header {
         width: 100%;
         height: 120px;
-        background-color: rgb(255, 196, 0);
+        background-color: $col-layout;
         display: flex;
         margin-bottom: 32px;
         p {
