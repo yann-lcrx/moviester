@@ -17,7 +17,7 @@ export default {
     font-size: 1.4rem;
     background-color: $col-bg-btn;
     color: $col-btn;
-    padding: 9px;
+    padding: 8px;
     width: 58px;
     border-radius: 4px;
     cursor: pointer;
