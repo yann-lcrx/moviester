@@ -28,7 +28,8 @@
 </template>
 
 <script>
-import Button from "@/components/Button.vue"
+import Button from "@/components/Button.vue";
+import MoviesApi from "@/services/api/movies.js";
 
   export default {
     name: "Quiz",
@@ -38,9 +39,11 @@ import Button from "@/components/Button.vue"
     data() {
       return {
         score: 140,
+        allowedTime: 15,
         time: 15,
         actor: 'Léa Seydoux',
-        film: 'The Lobster'
+        film: 'The Lobster',
+        movie: {}
       }
     },
     methods: {
@@ -48,10 +51,20 @@ import Button from "@/components/Button.vue"
         this.time--
       },
       resetTimer() {
-        this.time = 15;
+        this.time = this.allowedTime;
       }
     },
     mounted () {
+      MoviesApi.getMovie()
+        .then(movie => {
+          this.film = movie.title;
+        })
+        .catch (err => console.log(err))
+      MoviesApi.getActor()
+        .then(actor => {
+          console.log(actor)
+        })
+        .catch (err => console.log(err))
       var timerInterval = setInterval(this.decrement, 1000);
       setTimeout(function() {
         clearInterval(timerInterval)
