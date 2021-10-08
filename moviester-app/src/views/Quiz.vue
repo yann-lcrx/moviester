@@ -11,7 +11,7 @@
       <div class="quiz__gameover" v-if="time <= 0">
         <p>Game over</p>
         <div class="quiz__buttons">
-          <Button btnclass="btn btn--gameover" text="Retry" v-on:click="resetTimer"/>  
+          <Button btnclass="btn btn--gameover" text="Retry" v-on:click="restartQuiz"/>  
         </div>
       </div>
       <div class="quiz__question" v-if="time > 0">
@@ -19,8 +19,8 @@
           <p>Did <span class="quiz__variable">{{ actor }}</span> play in <span class="quiz__variable">{{ film }}</span>?</p>
         </div>
         <div class="quiz__buttons">
-          <Button btnclass="btn btn__yes" text="Yes" v-on:click="updateInfo" />
-          <Button btnclass="btn btn__no" text="No" v-on:click="updateInfo" />
+          <Button btnclass="btn btn__yes" text="Yes" v-on:click="checkYes" />
+          <Button btnclass="btn btn__no" text="No" v-on:click="checkNo" />
         </div>
       </div>
     </div>
@@ -38,7 +38,7 @@ import MoviesApi from "@/services/api/movies.js";
     },
     data() {
       return {
-        score: 140,
+        score: 0,
         allowedTime: 15,
         time: 15,
         actor: 'Léa Seydoux',
@@ -49,32 +49,38 @@ import MoviesApi from "@/services/api/movies.js";
       }
     },
     methods: {
-      decrement() {
+      decrementTimer() {
         this.time--
       },
       resetTimer() {
         this.time = this.allowedTime;
-        var timerInterval = setInterval(this.decrement, 1000);
+        var timerInterval = setInterval(this.decrementTimer, 1000);
         setTimeout(function() {
           clearInterval(timerInterval)
         }, (this.time + 1) * 1000)
       },
-      getMovie() {
-        MoviesApi.getMovie()
+      incrementScore() {
+        this.score++
+      },
+      resetScore() {
+        this.score = 0;
+      },
+      getMovie(id) {
+        MoviesApi.getMovie(id)
           .then(movie => {
             this.film = movie.title;
           })
           .catch (err => console.log(err))
       },
-      getMovieCredits() {
-        MoviesApi.getMovieCredits()
+      getMovieCredits(id) {
+        MoviesApi.getMovieCredits(id)
           .then(people => {
             this.actor = people.cast[0].name;
           })
           .catch (err => console.log(err))
       },
-      getActor() {
-        MoviesApi.getActor()
+      getActor(id) {
+        MoviesApi.getActor(id)
           .then(actor => {
             this.actor = actor.name;
           })
@@ -83,13 +89,32 @@ import MoviesApi from "@/services/api/movies.js";
       updateInfo() {
         this.isLoading = true;
         this.isCorrect = Math.random() < 0.5;
-        this.getMovie();
+        console.log(this.isCorrect);
+        let id = Math.ceil(Math.random() * 1000);
+        this.getMovie(id);
         if (this.isCorrect == true) {
-          this.getMovieCredits();
+          this.getMovieCredits(id);
         } else {
-          this.getActor();
+          id = Math.ceil(Math.random() * 1000);
+          this.getActor(id);
         }
         this.isLoading = false;
+      },
+      checkYes() {
+        if (this.isCorrect == true) {
+          this.incrementScore()
+        }
+        this.updateInfo();
+      },
+      checkNo() {
+        if (this.isCorrect == false) {
+          this.incrementScore()
+        }
+        this.updateInfo();
+      },
+      restartQuiz() {
+        this.resetScore();
+        this.resetTimer();
       }
     },
     mounted () {

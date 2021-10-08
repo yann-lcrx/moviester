@@ -1,20 +1,20 @@
 import axios from "axios";
 
 export default {
-    getMovie() {
-        return axios.get('movie/74?api_key=16607c0b583f536ffc3282bc6adfc080')
+    getMovie(id) {
+        return axios.get(`movie/${id}?api_key=16607c0b583f536ffc3282bc6adfc080`)
             .then(response => {
                 return response.data
             })
     },
-    getActor() {
-        return axios.get('person/505?api_key=16607c0b583f536ffc3282bc6adfc080')
+    getActor(id) {
+        return axios.get(`person/${id}?api_key=16607c0b583f536ffc3282bc6adfc080`)
             .then(response => {
                 return response.data
             })
     },
-    getMovieCredits() {
-        return axios.get('movie/74/credits?api_key=16607c0b583f536ffc3282bc6adfc080')
+    getMovieCredits(id) {
+        return axios.get(`movie/${id}/credits?api_key=16607c0b583f536ffc3282bc6adfc080`)
             .then(response => {
                 return response.data
             })
