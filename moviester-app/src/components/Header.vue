@@ -1,6 +1,6 @@
 <template>
     <header>
-        <p>Moviester</p>
+        <router-link to="/"><p>Moviester</p></router-link>
     </header>
 </template>
 
