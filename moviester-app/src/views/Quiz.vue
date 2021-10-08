@@ -19,8 +19,8 @@
           <p>Did <span class="quiz__variable">{{ actor }}</span> play in <span class="quiz__variable">{{ film }}</span>?</p>
         </div>
         <div class="quiz__buttons">
-          <Button btnclass="btn btn__yes" text="Yes" />
-          <Button btnclass="btn btn__no" text="No" />
+          <Button btnclass="btn btn__yes" text="Yes" v-on:click="updateInfo" />
+          <Button btnclass="btn btn__no" text="No" v-on:click="updateInfo" />
         </div>
       </div>
     </div>
@@ -43,7 +43,9 @@ import MoviesApi from "@/services/api/movies.js";
         time: 15,
         actor: 'Léa Seydoux',
         film: 'The Lobster',
-        movie: {}
+        movie: {},
+        isLoading: false,
+        isCorrect: true,
       }
     },
     methods: {
@@ -52,23 +54,46 @@ import MoviesApi from "@/services/api/movies.js";
       },
       resetTimer() {
         this.time = this.allowedTime;
+        var timerInterval = setInterval(this.decrement, 1000);
+        setTimeout(function() {
+          clearInterval(timerInterval)
+        }, (this.time + 1) * 1000)
+      },
+      getMovie() {
+        MoviesApi.getMovie()
+          .then(movie => {
+            this.film = movie.title;
+          })
+          .catch (err => console.log(err))
+      },
+      getMovieCredits() {
+        MoviesApi.getMovieCredits()
+          .then(people => {
+            this.actor = people.cast[0].name;
+          })
+          .catch (err => console.log(err))
+      },
+      getActor() {
+        MoviesApi.getActor()
+          .then(actor => {
+            this.actor = actor.name;
+          })
+          .catch (err => console.log(err))
+      },
+      updateInfo() {
+        this.isLoading = true;
+        this.isCorrect = Math.random() < 0.5;
+        this.getMovie();
+        if (this.isCorrect == true) {
+          this.getMovieCredits();
+        } else {
+          this.getActor();
+        }
+        this.isLoading = false;
       }
     },
     mounted () {
-      MoviesApi.getMovie()
-        .then(movie => {
-          this.film = movie.title;
-        })
-        .catch (err => console.log(err))
-      MoviesApi.getActor()
-        .then(actor => {
-          console.log(actor)
-        })
-        .catch (err => console.log(err))
-      var timerInterval = setInterval(this.decrement, 1000);
-      setTimeout(function() {
-        clearInterval(timerInterval)
-      }, (this.time + 1) * 1000)
+      this.resetTimer();
     }
   }
 </script>
