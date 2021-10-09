@@ -51,6 +51,10 @@ export default {
         &__logo{
             align-self: baseline;
             flex: 0.7;
+            img {
+                opacity: 0.3;
+                width: 100%;
+            }
         }
     h1 {
         align-self: start;
@@ -62,10 +66,6 @@ export default {
         margin-top: 0px;
         font-size: 1.55rem;
         margin-bottom: 8px;
-    }
-    img {
-        opacity: 0.3;
-        width: 100%;
     }
     .align {
         align-self: center;

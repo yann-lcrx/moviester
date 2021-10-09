@@ -8,10 +8,10 @@
       <p>Time: {{ time }}</p>
     </div>
     <div class="quiz__card">
-      <div class="quiz__frame">
-        <img :src="formatActorPortrait" :alt="actor">
+      <div class="quiz__frame" v-if="time > 0">
+        <Image :imgSource="formatActorPortrait" :imgAlt="actor"/>
       </div>
-      <div>
+      <div class="quiz__main">
         <div class="quiz__gameover" v-if="time <= 0">
           <p>Game over</p>
           <div class="quiz__buttons">
@@ -26,8 +26,8 @@
           </div>
         </div>
       </div>
-      <div class="quiz__frame">
-        <img :src="formatFilmPoster" :alt="film">
+      <div class="quiz__frame" v-if="time > 0">
+        <Image :imgSource="formatFilmPoster" :imgAlt="film"/>
       </div>
     </div>
   </section>
@@ -35,20 +35,22 @@
 
 <script>
 import Button from "@/components/Button.vue";
+import Image from "@/components/Image.vue";
 import MoviesApi from "@/services/api/movies.js";
 
   export default {
     name: "Quiz",
     components: {
-      Button
+      Button, Image
     },
     data() {
       return {
         score: 0,
-        allowedTime: 60,
+        allowedTime: 10,
         time: 0,
         actor: 'Léa Seydoux',
         actorPortait: '/7JAUieStGsHZAy6ed2WuFy4CJjm.jpg',
+        actorId: 0,
         film: 'The Lobster',
         filmPoster: '/nx3gldcChCfw7QwPdssSG9CPaok.jpg',
         movie: {},
@@ -85,13 +87,14 @@ import MoviesApi from "@/services/api/movies.js";
         MoviesApi.getMovie(id)
           .then(movie => {
             this.film = movie.title;
+            this.filmPoster = movie.poster_path;
           })
           .catch (err => console.log(err))
       },
       getMovieCredits(id) {
         MoviesApi.getMovieCredits(id)
           .then(people => {
-            this.actor = people.cast[0].name;
+            this.actorId = people.cast[0].id;
           })
           .catch (err => console.log(err))
       },
@@ -99,17 +102,21 @@ import MoviesApi from "@/services/api/movies.js";
         MoviesApi.getActor(id)
           .then(actor => {
             this.actor = actor.name;
+            this.actorPortait = actor.profile_path
           })
           .catch (err => console.log(err))
       },
       updateInfo() {
         this.isLoading = true;
+        //coin toss to determine if next question will be right or wrong
         this.isCorrect = Math.random() < 0.5;
         console.log(this.isCorrect);
+        //generate random movie id
         let id = Math.ceil(Math.random() * 1000);
         this.getMovie(id);
         if (this.isCorrect == true) {
           this.getMovieCredits(id);
+          this.getActor(this.actorId);
         } else {
           id = Math.ceil(Math.random() * 1000);
           this.getActor(id);
@@ -186,6 +193,14 @@ import MoviesApi from "@/services/api/movies.js";
     p {
       margin-right: 24px;
     }
+  }
+  &__frame {
+    flex: 0.35;
+  }
+  &__main {
+    flex: 1;
+    margin-left: 12px;
+    margin-right: 12px;
   }
 }
 </style>
