@@ -47,13 +47,14 @@ import MoviesApi from "@/services/api/movies.js";
       return {
         score: 0,
         highScore: 0,
-        allowedTime: 10,
+        allowedTime: 60,
         time: 0,
         actor: 'Léa Seydoux',
         actorPortait: '/7JAUieStGsHZAy6ed2WuFy4CJjm.jpg',
         actorId: 0,
         film: 'The Lobster',
         filmPoster: '/nx3gldcChCfw7QwPdssSG9CPaok.jpg',
+        filmId: 0,
         movie: {},
         isLoading: false,
         isCorrect: true,
@@ -76,7 +77,6 @@ import MoviesApi from "@/services/api/movies.js";
         var timerInterval = setInterval(this.decrementTimer, 1000);
         setTimeout(function() {
           clearInterval(timerInterval);
-          this.setNewHighscore();
         }, (this.time + 1) * 1000)
       },
       incrementScore() {
@@ -92,43 +92,66 @@ import MoviesApi from "@/services/api/movies.js";
       getHighScore() {
         this.highScore = localStorage.getItem('high score');
       },
-      getMovie(id) {
-        MoviesApi.getMovie(id)
+      async getAnyMovie() {
+        while (this.film == '' && this.time > 0) {
+          //generate random movie id
+          let id = Math.ceil(Math.random() * 1000);
+          await MoviesApi.getMovie(id)
           .then(movie => {
             this.film = movie.title;
             this.filmPoster = movie.poster_path;
+            this.filmId = movie.id;
           })
           .catch (err => console.log(err))
+        }
       },
-      getMovieCredits(id) {
-        MoviesApi.getMovieCredits(id)
+      async getMovieCredits(id) {
+        await MoviesApi.getMovieCredits(id)
           .then(people => {
             this.actorId = people.cast[0].id;
           })
           .catch (err => console.log(err))
       },
-      getActor(id) {
-        MoviesApi.getActor(id)
+      async getActor(id) {
+        await MoviesApi.getActor(id)
           .then(actor => {
             this.actor = actor.name;
             this.actorPortait = actor.profile_path
           })
           .catch (err => console.log(err))
       },
-      updateInfo() {
+      async getAnyActor() {
+        while (this.actor == '' && this.time > 0) {
+          //generate random actor id
+          let id = Math.ceil(Math.random() * 1000);
+          await MoviesApi.getActor(id)
+          .then(actor => {
+            this.actor = actor.name;
+            this.actorPortait = actor.profile_path;
+          })
+          .catch (err => console.log(err))
+        }
+      },
+      clearInfo() {
+        this.actor = '';
+        this.actorPortait = '';
+        this.actorId = 0;
+        this.film = '';
+        this.filmPoster = '';
+        this.filmId = 0;
+      },
+      async updateInfo() {
         this.isLoading = true;
+        this.clearInfo();
         //coin toss to determine if next question will be right or wrong
         this.isCorrect = Math.random() < 0.5;
         console.log(this.isCorrect);
-        //generate random movie id
-        let id = Math.ceil(Math.random() * 1000);
-        this.getMovie(id);
+        await this.getAnyMovie();
         if (this.isCorrect == true) {
-          this.getMovieCredits(id);
+          await this.getMovieCredits(this.filmId);
           this.getActor(this.actorId);
         } else {
-          id = Math.ceil(Math.random() * 1000);
-          this.getActor(id);
+          await this.getAnyActor();
         }
         this.isLoading = false;
       },
@@ -148,6 +171,7 @@ import MoviesApi from "@/services/api/movies.js";
         this.getHighScore();
         this.resetScore();
         this.setTimer();
+        this.updateInfo();
       },
       restartQuiz() {
         if (this.highScore < this.score) {
