@@ -3,7 +3,7 @@
     <div class="quiz__heading">
       <div class="quiz__scores">
         <p>Score: {{ score }}</p>
-        <p>Best: {{ score }}</p>
+        <p>Best: {{ highScore }}</p>
       </div>
       <p>Time: {{ time }}</p>
     </div>
@@ -46,6 +46,7 @@ import MoviesApi from "@/services/api/movies.js";
     data() {
       return {
         score: 0,
+        highScore: 0,
         allowedTime: 10,
         time: 0,
         actor: 'Léa Seydoux',
@@ -70,11 +71,12 @@ import MoviesApi from "@/services/api/movies.js";
       decrementTimer() {
         this.time--
       },
-      resetTimer() {
+      setTimer() {
         this.time = this.allowedTime;
         var timerInterval = setInterval(this.decrementTimer, 1000);
         setTimeout(function() {
-          clearInterval(timerInterval)
+          clearInterval(timerInterval);
+          this.setNewHighscore();
         }, (this.time + 1) * 1000)
       },
       incrementScore() {
@@ -82,6 +84,13 @@ import MoviesApi from "@/services/api/movies.js";
       },
       resetScore() {
         this.score = 0;
+      },
+      setNewHighscore() {
+        this.highScore = this.score;
+        localStorage.setItem('high score', this.highScore);
+      },
+      getHighScore() {
+        this.highScore = localStorage.getItem('high score');
       },
       getMovie(id) {
         MoviesApi.getMovie(id)
@@ -135,13 +144,20 @@ import MoviesApi from "@/services/api/movies.js";
         }
         this.updateInfo();
       },
-      restartQuiz() {
+      startQuiz() {
+        this.getHighScore();
         this.resetScore();
-        this.resetTimer();
+        this.setTimer();
+      },
+      restartQuiz() {
+        if (this.highScore < this.score) {
+          this.setNewHighscore();
+        }
+        this.startQuiz();
       }
     },
     mounted () {
-      this.resetTimer();
+      this.startQuiz()
     }
   }
 </script>
@@ -152,11 +168,14 @@ import MoviesApi from "@/services/api/movies.js";
   display: flex;
   flex-flow: column nowrap;
   flex: 1;
+
   &__card {
     background-color: #FDFDFD;
     border: 1px lightgray solid;
     border-radius: 8px;
     padding: 12px;
+    padding-left: 16px;
+    padding-right: 16px;
     flex: 1;
     display: flex;
     flex-flow: row nowrap;
@@ -174,29 +193,35 @@ import MoviesApi from "@/services/api/movies.js";
       margin-top: 0px;
     }
   }
+
   &__heading {
     display: flex;
     flex-flow: row nowrap;
     justify-content: space-between;
   }
+
   &__buttons {
     width: 240px;
     display: flex;
     align-self: center;
     justify-content: space-evenly;
   }
+
   &__variable {
     color: $col-emphasis;
   }
+
   &__scores {
     display: flex;
     p {
       margin-right: 24px;
     }
   }
+
   &__frame {
     flex: 0.35;
   }
+
   &__main {
     flex: 1;
     margin-left: 12px;

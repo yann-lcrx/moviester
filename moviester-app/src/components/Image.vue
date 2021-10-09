@@ -1,5 +1,5 @@
 <template>
-    <img :src="imgSource" :alt="imgAlt">
+    <img class="movie-image" :src="imgSource" :alt="imgAlt">
 </template>
 
 <script>
@@ -13,7 +13,7 @@ export default {
 </script>
 
 <style lang="scss">
-    img {
+    .movie-image {
         width: 100%;
         border-radius: 8px;
         border: 1px solid lightgray;
