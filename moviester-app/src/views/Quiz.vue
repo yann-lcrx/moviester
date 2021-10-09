@@ -8,17 +8,19 @@
       <p>Time: {{ time }}</p>
     </div>
     <div class="quiz__card">
-      <div class="quiz__frame" v-if="time > 0">
+      <div class="quiz__frame" v-if="time > 0 && actorPortait != null">
         <Image :imgSource="formatActorPortrait" :imgAlt="actor"/>
       </div>
       <div class="quiz__main">
+        <Spinner v-if="time > 0 && isLoading == true" />
         <div class="quiz__gameover" v-if="time <= 0">
           <p>Game over</p>
+          <p>Your score: {{ score }}</p>
           <div class="quiz__buttons">
             <Button btnclass="btn btn--gameover" text="Retry" v-on:click="restartQuiz"/>  
           </div>
         </div>
-        <div class="quiz__question" v-if="time > 0">
+        <div class="quiz__question" v-if="time > 0 && isLoading == false">
           <p>Did <span class="quiz__variable">{{ actor }}</span> play in <span class="quiz__variable">{{ film }}</span>?</p>
           <div class="quiz__buttons">
             <Button btnclass="btn btn__yes" text="Yes" v-on:click="checkYes" />
@@ -26,7 +28,7 @@
           </div>
         </div>
       </div>
-      <div class="quiz__frame" v-if="time > 0">
+      <div class="quiz__frame" v-if="time > 0 && filmPoster != null">
         <Image :imgSource="formatFilmPoster" :imgAlt="film"/>
       </div>
     </div>
@@ -36,12 +38,13 @@
 <script>
 import Button from "@/components/Button.vue";
 import Image from "@/components/Image.vue";
+import Spinner from "@/components/Spinner.vue";
 import MoviesApi from "@/services/api/movies.js";
 
   export default {
     name: "Quiz",
     components: {
-      Button, Image
+      Button, Image, Spinner
     },
     data() {
       return {
@@ -128,16 +131,26 @@ import MoviesApi from "@/services/api/movies.js";
           .then(actor => {
             this.actor = actor.name;
             this.actorPortait = actor.profile_path;
+            this.actorId = actor.id;
           })
           .catch (err => console.log(err))
         }
       },
+      async checkIfActorIsInFilm(actorId, filmId) {
+        await MoviesApi.getMovieCredits(filmId)
+          .then(people => {
+            for (let actor of people.cast) {
+              if (actor.id == actorId) {
+                return this.isCorrect = true;
+              }
+            }
+          })
+          .catch (err => console.log(err))
+      },
       clearInfo() {
         this.actor = '';
-        this.actorPortait = '';
         this.actorId = 0;
         this.film = '';
-        this.filmPoster = '';
         this.filmId = 0;
       },
       async updateInfo() {
@@ -145,13 +158,13 @@ import MoviesApi from "@/services/api/movies.js";
         this.clearInfo();
         //coin toss to determine if next question will be right or wrong
         this.isCorrect = Math.random() < 0.5;
-        console.log(this.isCorrect);
         await this.getAnyMovie();
         if (this.isCorrect == true) {
           await this.getMovieCredits(this.filmId);
           this.getActor(this.actorId);
         } else {
           await this.getAnyActor();
+          this.checkIfActorIsInFilm(this.actorId, this.filmId);
         }
         this.isLoading = false;
       },
@@ -250,6 +263,15 @@ import MoviesApi from "@/services/api/movies.js";
     flex: 1;
     margin-left: 12px;
     margin-right: 12px;
+  }
+
+  &__gameover {
+    p:first-child {
+      font-weight: bold;
+    }
+    p:nth-child(2) {
+      color: $col-emphasis;
+    }
   }
 }
 </style>
