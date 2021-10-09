@@ -1,6 +1,8 @@
 <template>
     <header>
-        <router-link to="/"><p>Moviester</p></router-link>
+        <div>
+            <router-link to="/"><img src="../assets/moviester-darkblue.png" alt="moviester logo" class="moviester-logo"></router-link>
+        </div>
     </header>
 </template>
 
@@ -17,10 +19,20 @@ header {
     background-color: $col-layout;
     display: flex;
     margin-bottom: 48px;
+    > div {
+        max-width: $max-screen-width;
+        flex: 1;
+        margin: auto;
+        text-align: initial;
+    }
     p {
         align-self: center;
         margin-left: 12px;
         font-family: "Godzilla", Arial, Helvetica, sans-serif;
     }
+.moviester-logo {
+    height: 32px;
+    align-self: center;
+}
 }
 </style>
