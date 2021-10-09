@@ -28,6 +28,7 @@ export default {
 </script>
 
 <style lang="scss">
+
     .home{
         flex: 1;
         display: flex;
@@ -40,7 +41,9 @@ export default {
             justify-content: space-between;
         }
         &__instructions {
-            align-self: start;
+            opacity: 0;
+            animation: menu-appear 1100ms ease-out forwards;
+            align-self: center;
             text-align: start;
             display: flex;
             flex-flow: column nowrap;
@@ -66,9 +69,6 @@ export default {
         margin-top: 0px;
         font-size: 1.55rem;
         margin-bottom: 8px;
-    }
-    .align {
-        align-self: center;
     }
     .emphasis {
         color: $col-emphasis;

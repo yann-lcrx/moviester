@@ -272,6 +272,13 @@ import MoviesApi from "@/services/api/movies.js";
     p:nth-child(2) {
       color: $col-emphasis;
     }
+    animation: menu-appear 1800ms ease-out forwards;
+  }
+
+  &__question {
+    opacity: 0;
+    animation: menu-appear 350ms ease-out forwards;
+
   }
 }
 </style>

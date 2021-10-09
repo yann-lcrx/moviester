@@ -13,14 +13,7 @@ export default {
 </script>
 
 <style lang="scss">
-@keyframes loader-blink{
-    0%{
-        opacity: 0.5;
-    }
-    100%{
-        opacity: 0.1;
-    }
-}
+
 
     #loading {
         font-size: 12rem;
@@ -30,7 +23,13 @@ export default {
     }
     .loading {
         &__spinner {
+            opacity: 0.5;
             animation: loader-blink 0.3s ease-in-out alternate infinite;
+            @for $i from 1 through 3{
+                &--#{$i} {
+                    animation-delay: 30ms * ($i - 1);
+                }
+            }
         }
     }
 </style>
