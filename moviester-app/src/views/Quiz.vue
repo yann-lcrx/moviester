@@ -39,8 +39,8 @@ import MoviesApi from "@/services/api/movies.js";
     data() {
       return {
         score: 0,
-        allowedTime: 15,
-        time: 15,
+        allowedTime: 60,
+        time: 0,
         actor: 'Léa Seydoux',
         film: 'The Lobster',
         movie: {},
@@ -167,11 +167,5 @@ import MoviesApi from "@/services/api/movies.js";
       margin-right: 24px;
     }
   }
-}
-button {
-  background-color: unset;
-  border: 1px solid darkblue;
-  color: darkblue;
-  border-radius: 6px;
 }
 </style>

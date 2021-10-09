@@ -31,7 +31,7 @@ export default {
 }
 .page-body {
   margin: auto;
-  max-width: 900px;
+  max-width: 980px;
   min-height: 65%;
   display: flex;
   flex-flow: column nowrap;
