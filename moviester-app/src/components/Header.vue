@@ -13,10 +13,10 @@ export default {
 <style lang="scss">
 header {
     width: 100%;
-    height: 120px;
+    height: 105px;
     background-color: $col-layout;
     display: flex;
-    margin-bottom: 32px;
+    margin-bottom: 48px;
     p {
         align-self: center;
         margin-left: 12px;

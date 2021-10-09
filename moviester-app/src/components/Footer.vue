@@ -13,10 +13,10 @@ export default {
 <style lang="scss">
 footer {
     width: 100%;
-    height: 120px;
+    height: 105px;
     background-color: $col-layout;
     display: flex;
     justify-content: center;
-    margin-top: 32px;
+    margin-top: 48px;
 }
 </style>

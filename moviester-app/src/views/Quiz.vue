@@ -8,20 +8,26 @@
       <p>Time: {{ time }}</p>
     </div>
     <div class="quiz__card">
-      <div class="quiz__gameover" v-if="time <= 0">
-        <p>Game over</p>
-        <div class="quiz__buttons">
-          <Button btnclass="btn btn--gameover" text="Retry" v-on:click="restartQuiz"/>  
+      <div class="quiz__frame">
+        <img :src="formatActorPortrait" :alt="actor">
+      </div>
+      <div>
+        <div class="quiz__gameover" v-if="time <= 0">
+          <p>Game over</p>
+          <div class="quiz__buttons">
+            <Button btnclass="btn btn--gameover" text="Retry" v-on:click="restartQuiz"/>  
+          </div>
+        </div>
+        <div class="quiz__question" v-if="time > 0">
+          <p>Did <span class="quiz__variable">{{ actor }}</span> play in <span class="quiz__variable">{{ film }}</span>?</p>
+          <div class="quiz__buttons">
+            <Button btnclass="btn btn__yes" text="Yes" v-on:click="checkYes" />
+            <Button btnclass="btn btn__no" text="No" v-on:click="checkNo" />
+          </div>
         </div>
       </div>
-      <div class="quiz__question" v-if="time > 0">
-        <div>
-          <p>Did <span class="quiz__variable">{{ actor }}</span> play in <span class="quiz__variable">{{ film }}</span>?</p>
-        </div>
-        <div class="quiz__buttons">
-          <Button btnclass="btn btn__yes" text="Yes" v-on:click="checkYes" />
-          <Button btnclass="btn btn__no" text="No" v-on:click="checkNo" />
-        </div>
+      <div class="quiz__frame">
+        <img :src="formatFilmPoster" :alt="film">
       </div>
     </div>
   </section>
@@ -42,10 +48,20 @@ import MoviesApi from "@/services/api/movies.js";
         allowedTime: 60,
         time: 0,
         actor: 'Léa Seydoux',
+        actorPortait: '/7JAUieStGsHZAy6ed2WuFy4CJjm.jpg',
         film: 'The Lobster',
+        filmPoster: '/nx3gldcChCfw7QwPdssSG9CPaok.jpg',
         movie: {},
         isLoading: false,
         isCorrect: true,
+      }
+    },
+    computed: {
+      formatActorPortrait() {
+        return 'https://www.themoviedb.org/t/p/w300_and_h450_bestv2/' + this.actorPortait
+      },
+      formatFilmPoster() {
+        return 'https://www.themoviedb.org/t/p/w300_and_h450_bestv2' + this.filmPoster
       }
     },
     methods: {
@@ -136,12 +152,16 @@ import MoviesApi from "@/services/api/movies.js";
     padding: 12px;
     flex: 1;
     display: flex;
-    justify-content: center;
+    flex-flow: row nowrap;
+    justify-content: space-between;
     > div {
+      align-self: center;
+      > div {
       display: flex;
       flex-flow: column nowrap;
       justify-content: center;
-      font-size: 1.7rem;
+      font-size: 1.65rem;
+      }
     }
     p {
       margin-top: 0px;
@@ -153,7 +173,7 @@ import MoviesApi from "@/services/api/movies.js";
     justify-content: space-between;
   }
   &__buttons {
-    width: 30%;
+    width: 240px;
     display: flex;
     align-self: center;
     justify-content: space-evenly;
