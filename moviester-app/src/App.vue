@@ -9,15 +9,16 @@
 </template>
 
 <script>
-import Footer from '@/components/Footer';
-import Header from '@/components/Header';
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
 
 export default {
   name: "App",
-  components : {
-    Footer, Header
-  }
-}
+  components: {
+    Footer,
+    Header,
+  },
+};
 </script>
 
 <style lang="scss">
@@ -36,7 +37,10 @@ export default {
   display: flex;
   flex-flow: column nowrap;
 }
-html, body, #app, #moviester-app {
+html,
+body,
+#app,
+#moviester-app {
   height: 100%;
 }
 body {
